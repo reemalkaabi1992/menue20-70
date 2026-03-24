@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" id="htmlTag">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>RAYAN MINI | ريان ميني</title>
+    
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Rayan Mini">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#6b7e5f">
+
+    <style>
+        :root { --olive: #6b7e5f; --brown: #8b4513; --beige: #f4eee4; --white: #ffffff; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background-color: var(--beige); color: #333; margin: 0; padding: 10px; line-height: 1.6; }
+        
+        /* الحاوية الرئيسية */
+        .container { 
+            max-width: 600px; background: var(--white); margin: 20px auto; 
+            padding: 25px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); 
+            border-top: 12px solid var(--brown); 
+        }
+
+        /* زر تبديل اللغة */
+        .lang-switch { text-align: left; margin-bottom: 15px; }
+        .lang-btn { background: var(--olive); color: white; border: none; padding: 8px 18px; border-radius: 25px; cursor: pointer; font-weight: bold; font-size: 14px; transition: 0.3s; }
+        .lang-btn:active { transform: scale(0.95); }
+        
+        .header { text-align: center; margin-bottom: 25px; border-bottom: 2px solid #eee; padding-bottom: 15px; }
+        .header h2 { color: var(--brown); margin: 0; font-size: 28px; }
+        .header p { color: #666; font-size: 15px; margin-top: 5px; }
+
+        .field { margin-bottom: 20px; }
+        label { display: block; font-weight: bold; margin-bottom: 8px; color: var(--brown); font-size: 15px; }
+        input, select, textarea { width: 100%; padding: 14px; border: 1px solid #ddd; border-radius: 12px; font-size: 16px; background: #fafafa; transition: 0.3s; }
+        input:focus, select:focus { border-color: var(--olive); outline: none; background: #fff; }
+        
+        /* تحريك ظهور المنيو */
+        .menu-box { display: none; animation: fadeIn 0.5s ease forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .section-title { background: var(--olive); color: white; padding: 12px; border-radius: 10px; margin: 35px 0 15px 0; text-align: center; font-size: 18px; font-weight: bold; }
+        
+        /* تصميم المجموعات */
+        .sub-group { background: #fff; border: 1px solid #eee; padding: 15px; border-radius: 15px; margin-bottom: 25px; position: relative; box-shadow: 0 2px 8px rgba(0,0,0,0.03); }
+        .group-number { position: absolute; top: -15px; right: 15px; background: var(--brown); color: white; width: 32px; height: 32px; border-radius: 50%; text-align: center; line-height: 32px; font-weight: bold; font-size: 14px; }
+        [dir="ltr"] .group-number { right: auto; left: 15px; }
+        
+        .choose-hint { font-size: 11px; color: #888; font-weight: normal; margin-right: 40px; display: block; margin-bottom: 5px; }
+        [dir="ltr"] .choose-hint { margin-right: 0; margin-left: 40px; }
+        
+        .option { display: flex; align-items: center; padding: 12px; cursor: pointer; border-bottom: 1px solid #f9f9f9; transition: 0.2s; }
+        .option:active { background: #f0f0f0; }
+        .option span { flex: 1; }
+        
+        input[type="radio"] { width: 22px; height: 22px; margin-left: 15px; accent-color: var(--olive); cursor: pointer; }
+        [dir="ltr"] input[type="radio"] { margin-left: 0; margin-right: 15px; }
+
+        /* خانة كتابة الأصناف المختارة (للمكس) */
+        .mix-box { display: none; margin-top: 10px; border: 2px dashed var(--olive); padding: 10px; border-radius: 10px; background: #fff; animation: slideDown 0.3s ease; }
+        @keyframes slideDown { from { transform: translateY(-10px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+        .btn-send { 
+            width: 100%; padding: 20px; background-color: #25D366; color: white; 
+            border: none; border-radius: 15px; font-size: 20px; font-weight: bold; 
+            cursor: pointer; margin-top: 30px; box-shadow: 0 5px 15px rgba(37,211,102,0.3); 
+            transition: 0.3s;
+        }
+        .btn-send:active { transform: scale(0.98); box-shadow: none; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="lang-switch"><button class="lang-btn" onclick="toggleLanguage()" id="langBtn">English</button></div>
+    
+    <div class="header">
+        <h2 id="title">ريان ميني</h2>
+        <p id="subtitle">اختيار الأصناف من المنيو</p>
+    </div>
+
+    <div class="field"><label id="lblCustName">👤 اسم العميل:</label><input type="text" id="custName" placeholder="..."></div>
+    <div style="display: flex; gap: 10px;">
+        <div class="field" style="flex:1;"><label id="lblDate">📅 التاريخ:</label><input type="date" id="orderDate"></div>
+        <div class="field" style="flex:1;"><label id="lblLoc">📍 المنطقة:</label><input type="text" id="loc" placeholder="..."></div>
+    </div>
+
+    <div class="field">
+        <label id="lblMenu">🍽 اختر القائمة (العدد):</label>
+        <select id="menuSelect" onchange="loadMenu()">
+            <option value="" id="optDefault">-- اضغط للاختيار --</option>
+            <option value="20" id="opt20">قائمة 20 شخص (2200 درهم)</option>
+            <option value="30" id="opt30">قائمة 30 شخص (3000 درهم)</option>
+            <option value="40" id="opt40">قائمة 40 شخص (3800 درهم)</option>
+            <option value="50" id="opt50">قائمة 50 شخص (4600 درهم)</option>
+            <option value="60" id="opt60">قائمة 60 شخص (5400 درهم)</option>
+            <option value="70" id="opt70">قائمة 70 شخص (6200 درهم)</option>
+        </select>
+    </div>
+
+    <div id="menuContainer" class="menu-box">
+        <div id="mainsArea"></div>
+        <div id="sidesArea"></div>
+        <div id="sweetsArea"></div>
+        <div class="section-title" id="lblExtraTitle">أصناف إضافية (بسعر إضافي)</div>
+        <textarea id="extraText" rows="3" placeholder="..."></textarea>
+        <button class="btn-send" onclick="sendWhatsApp()" id="btnSend">إرسال الطلب عبر واتساب</button>
+    </div>
+</div>
+
+<script>
+    let currentLang = 'ar';
+    const translations = {
+        ar: { title: "ريان ميني", subtitle: "اختيار الأصناف حرفياً من المنيو", hint: "(اختار صنف واحد)", name: "👤 اسم العميل:", date: "📅 التاريخ:", loc: "📍 المنطقة:", menu: "🍽 اختر القائمة (العدد):", opt: "-- اضغط للاختيار --", extra: "أصناف إضافية (بسعر إضافي)", send: "إرسال الطلب عبر واتساب", mainT: "الوجبات الرئيسية", sideT: "السلطات والمقبلات", sweetT: "الحلويات", mixPlc: "اكتب الأصناف المختارة هنا...",
+              m20: "قائمة 20 شخص (2200 درهم)", m30: "قائمة 30 شخص (3000 درهم)", m40: "قائمة 40 شخص (3800 درهم)", m50: "قائمة 50 شخص (4600 درهم)", m60: "قائمة 60 شخص (5400 درهم)", m70: "قائمة 70 شخص (6200 درهم)" },
+        en: { title: "RAYAN MINI", subtitle: "Select items directly from the menu", hint: "(Choose one item)", name: "👤 Customer Name:", date: "📅 Date:", loc: "📍 Area:", menu: "🍽 Select Menu:", opt: "-- Click to select --", extra: "Extra Items (Additional Price)", send: "Send via WhatsApp", mainT: "Main Courses", sideT: "Salads & Appetizers", sweetT: "Sweets", mixPlc: "Specify the 2 types here...",
+              m20: "Menu 20 People (2200 DHS)", m30: "Menu 30 People (3000 DHS)", m40: "Menu 40 People (3800 DHS)", m50: "Menu 50 People (4600 DHS)", m60: "Menu 60 People (5400 DHS)", m70: "Menu 70 People (6200 DHS)" }
+    };
+
+    const menus = {
+        "20": {
+            mains: { 
+                ar: [["برياني لحم", "برياني دجاج", "مكبوس لحم", "مكبوس دجاج"], ["مرقوقة دجاج", "ثريد دجاج", "مسالا دجاج", "شكن بتر"], ["باستا وايت", "باستا بينك", "بشاميل", "لازانيا", "معكرونة بولونيز"], ["صينية كرات البطاطا مع الدجاج", "اسكالوب الدجاج مع البطاطا المهروسة", "مشاوي مشكله"], ["ارز ابيض", "ارز زعفران", "ارز بالشعيرية", "براتا", "نودلز", "نودلز بالخضار"]],
+                en: [["Bryani Laham", "Bryani chicken", "kabsa Laham", "kabsa chicken"], ["Chicken Margouga", "Chicken thread", "Chicken Masala", "Chicken Butter"], ["Pasta white", "Pasta pink", "béchamel", "lasagna", "Bolognese pasta"], ["a tray of potato balls with chicken", "chicken escalope with mashed potatoes", "Mixed grills"], ["White rice", "saffron rice", "rice with sharia", "paratha", "noodles", "noodles with vegetables"]]
+            },
+            sides: {
+                ar: [["فتوش", "تبولة", "جرجير مع شمندر"], ["حمص", "متبل"], ["فتة دجاج", "فتة باذنجان"], ["مسخن", "كبة", "سبرينغ رول"], ["محشي ورق عنب", "ملفوف", "كوسا", "مكس صنفين"], ["ساندويتش تورتيلا", "كلوب ساندويتش", "برجر", "مكس صنفين"]],
+                en: [["Fattoush", "Tabbouleh", "jar jiar Salad with shamander"], ["Hummus", "Mutabbal"], ["Chicken Fattah", "Eggplant Fattah"], ["Musakhan", "Kibbeh", "spring rolls"], ["Warq Unap Mahshi", "Malfof Mahshi", "kusa Mahshi", "MIX 2 type"], ["Tortilla Sandwich", "Club Sandwich", "Burger", "MIX 2 type"]]
+            },
+            sweets: {
+                ar: [["ام علي", "كنافة", "بودينغ تمر"], ["شيز كيك", "سلطة فواكه", "مكس صنفين"]],
+                en: [["Um Ali", "kunafa", "Budding Cake dates"], ["cheese cake", "fruit salad", "MIX 2 type"]]
+            }
+        },
+        "30": {
+            mains: { 
+                ar: [["برياني لحم", "برياني دجاج", "مكبوس لحم", "مكبوس دجاج"], ["مرقوقة دجاج", "ثريد دجاج", "مسالا دجاج", "شكن بتر"], ["باستا وايت", "باستا بينك", "بشاميل", "لازانيا", "معكرونة بولونيز"], ["صينية كرات البطاطا مع الدجاج", "اسكالوب الدجاج مع البطاطا المهروسة", "مشاوي مشكله"], ["هريس لحم", "هريس دجاج", "كشري", "صالونة باميا مع الدجاج"], ["ارز ابيض", "ارز زعفران", "ارز بالشعيرية", "براتا", "نودلز", "نودلز بالخضار"]],
+                en: [["Bryani Laham", "Bryani chicken", "kabsa Laham", "kabsa chicken"], ["Chicken Margouga", "Chicken thread", "Chicken Masala", "Chicken Butter"], ["Pasta white", "Pasta pink", "béchamel", "lasagna", "Bolognese pasta"], ["a tray of potato balls with chicken", "chicken escalope with mashed potatoes", "Mixed grills"], ["Harees meat", "Harees chicken", "koshari", "pamia salona with chicken"], ["White rice", "saffron rice", "rice with sharia", "paratha", "noodles", "noodles with vegetables"]]
+            },
+            sides: {
+                ar: [["فتوش", "تبولة", "جرجير مع شمندر"], ["حمص", "متبل", "بابا غنوج"], ["فتة دجاج", "فتة باذنجان", "سيزر سلط"], ["مسخن", "كبة", "سبرينغ رول", "مكس صنفين"], ["محشي ورق عنب", "ملفوف", "كوسا", "مكس صنفين"], ["ساندويتش تورتيلا", "كلوب ساندويتش", "برجر", "مكس صنفين"]],
+                en: [["Fattoush", "Tabbouleh", "jar jiar Salad with shamander"], ["Hummus", "Mutabbal", "Baba Ghanoush"], ["Chicken Fattah", "Eggplant Fattah", "Caesar salad"], ["Musakhan", "Kibbeh", "spring rolls", "MIX 2 type"], ["Warq Unap Mahshi", "Malfof Mahshi", "kusa Mahshi", "MIX 2 type"], ["Tortilla Sandwich", "Club Sandwich", "Burger", "MIX 2 type"]]
+            },
+            sweets: {
+                ar: [["ام علي", "كنافة", "بودينغ تمر"], ["شيز كيك", "تارت مشكل", "مكس صنفين"], ["سلطة فواكه", "سويتات اكواب باردة", "مكس صنفين"]],
+                en: [["Um Ali", "kunafa", "Budding Cake dates"], ["cheese cake", "tart mini mix", "MIX 2 type"], ["fruit salad", "sweet cup cold mix", "MIX 2 type"]]
+            }
+        },
+        "40": {
+            mains: { 
+                ar: [["برياني لحم", "برياني دجاج", "مكبوس لحم", "مكبوس دجاج"], ["مرقوقة دجاج", "ثريد دجاج", "مسالا دجاج", "شكن بتر"], ["باستا وايت", "باستا بينك", "بشاميل", "لازانيا", "معكرونة بولونيز"], ["صينية كرات البطاطا مع الدجاج", "اسكالوب الدجاج مع البطاطا المهروسة", "مشاوي مشكله"], ["هريس لحم", "هريس دجاج", "كشري", "صالونة باميا مع الدجاج"], ["ارز ابيض", "ارز زعفران", "ارز بالشعيرية", "براتا", "نودلز", "نودلز بالخضار"]],
+                en: [["Bryani Laham", "Bryani chicken", "kabsa Laham", "kabsa chicken"], ["Chicken Margouga", "Chicken thread", "Chicken Masala", "Chicken Butter"], ["Pasta white", "Pasta pink", "béchamel", "lasagna", "Bolognese pasta"], ["a tray of potato balls with chicken", "chicken escalope with mashed potatoes", "Mixed grills"], ["Harees meat", "Harees chicken", "koshari", "pamia salona with chicken"], ["White rice", "saffron rice", "rice with sharia", "paratha", "noodles", "noodles with vegetables"]]
+            },
+            sides: {
+                ar: [["فتوش", "تبولة", "جرجير مع شمندر"], ["حمص", "متبل", "بابا غنوج"], ["سلطة المتاي", "سلطة الناتشوز", "سيزر سلط"], ["فتة دجاج", "فتة باذنجان", "ديناميت دجاج", "ديناميت ربيان"], ["مسخن", "كبة", "سبرينغ رول", "مكس صنفين"], ["محشي ورق عنب", "ملفوف", "كوسا", "مكس صنفين"], ["ساندويتش تورتيلا", "كلوب ساندويتش", "برجر", "مكس صنفين"]],
+                en: [["Fattoush", "Tabbouleh", "jar jiar Salad with shamander"], ["Hummus", "Mutabbal", "Baba Ghanoush"], ["Matai salad", "nachos salad", "Caesar salad"], ["Chicken Fattah", "Eggplant Fattah", "dynamite chicken", "dynamite shrimp"], ["Musakhan", "Kibbeh", "spring rolls", "MIX 2 type"], ["Warq Unap Mahshi", "Malfof Mahshi", "kusa Mahshi", "MIX 2 type"], ["Tortilla Sandwich", "Club Sandwich", "Burger", "MIX 2 type"]]
+            },
+            sweets: {
+                ar: [["ام علي", "كنافة", "بودينغ تمر"], ["شيز كيك", "تارت مشكل", "مكس صنفين"], ["سلطة فواكه", "سويتات اكواب باردة", "مكس صنفين"], ["كيكة الزعفران بالكسترد", "كريم كراميل", "مكس صنفين"]],
+                en: [["Um Ali", "kunafa", "Budding Cake dates"], ["cheese cake", "tart mini mix", "MIX 2 type"], ["fruit salad", "sweet cup cold mix", "MIX 2 type"], ["Saffron cake with custard", "cream caramel", "MIX 2 type"]]
+            }
+        },
+        "50": {
+            mains: { 
+                ar: [["برياني لحم", "برياني دجاج", "مكبوس لحم", "مكبوس دجاج"], ["مرقوقة دجاج", "ثريد دجاج", "مسالا دجاج", "شكن بتر"], ["باستا وايت", "باستا بينك", "بشاميل", "لازانيا", "معكرونة بولونيز"], ["صينية كرات البطاطا مع الدجاج", "اسكالوب الدجاج مع البطاطا المهروسة", "مشاوي مشكله"], ["هريس لحم", "هريس دجاج", "كشري", "صالونة باميا مع الدجاج"], ["بطاطس بالصلصة الحارة", "باذنجان بالصلصة الحارة"], ["ارز ابيض", "ارز زعفران", "ارز بالشعيرية", "براتا", "نودلز", "نودلز بالخضار"]],
+                en: [["Bryani Laham", "Bryani chicken", "kabsa Laham", "kabsa chicken"], ["Chicken Margouga", "Chicken thread", "Chicken Masala", "Chicken Butter"], ["Pasta white", "Pasta pink", "béchamel", "lasagna", "Bolognese pasta"], ["a tray of potato balls with chicken", "chicken escalope with mashed potatoes", "Mixed grills"], ["Harees meat", "Harees chicken", "koshari", "pamia salona with chicken"], ["Potatoes with hot sauce", "eggplant with hot sauce"], ["White rice", "saffron rice", "rice with sharia", "paratha", "noodles", "noodles with vegetables"]]
+            },
+            sides: {
+                ar: [["فتوش", "تبولة", "جرجير مع شمندر"], ["حمص", "متبل", "بابا غنوج"], ["سلطة المتاي", "سلطة الناتشوز"], ["سيزر سلط", "المعكرونة والروبيان"], ["فتة دجاج", "فتة باذنجان", "ديناميت دجاج", "ديناميت ربيان"], ["مسخن", "كبة", "سبرينغ رول", "مكس صنفين"], ["محشي ورق عنب", "ملفوف", "كوسا", "مكس صنفين"], ["ساندويتش تورتيلا", "كلوب ساندويتش", "برجر", "مكس صنفين"]],
+                en: [["Fattoush", "Tabbouleh", "jar jiar Salad with shamander"], ["Hummus", "Mutabbal", "Baba Ghanoush"], ["Matai salad", "nachos salad"], ["Caesar salad", "macron and shrimp salad"], ["Chicken Fattah", "Eggplant Fattah", "dynamite chicken", "dynamite shrimp"], ["Musakhan", "Kibbeh", "spring rolls", "MIX 2 type"], ["Warq Unap Mahshi", "Malfof Mahshi", "kusa Mahshi", "MIX 2 type"], ["Tortilla Sandwich", "Club Sandwich", "mini Burger", "MIX 2 type"]]
+            },
+            sweets: {
+                ar: [["ام علي", "كنافة", "بودينغ تمر"], ["شيز كيك", "تارت مشكل", "مكس صنفين"], ["سلطة فواكه", "سويتات اكواب باردة", "مكس صنفين"], ["كيكة الزعفران بالكسترد", "كريم كراميل", "مكس صنفين"]],
+                en: [["Um Ali", "kunafa", "Budding Cake dates"], ["cheese cake", "tart mini mix", "MIX 2 type"], ["fruit salad", "sweet cup cold mix", "MIX 2 type"], ["Saffron cake with custard", "cream caramel", "MIX 2 type"]]
+            }
+        },
+        "60": {
+            mains: { 
+                ar: [["برياني لحم", "برياني دجاج", "مكبوس لحم", "مكبوس دجاج"], ["مرقوقة دجاج", "ثريد دجاج", "مسالا دجاج", "شكن بتر"], ["باستا وايت", "باستا بينك", "بشاميل", "لازانيا", "معكرونة بولونيز"], ["صينية كرات البطاطا مع الدجاج", "اسكالوب الدجاج مع البطاطا المهروسة", "مشاوي مشكله"], ["ربيان مقلي مع الرز الصيني", "فيليه الدجاج بالكريمه والمشروم"], ["هريس لحم", "هريس دجاج", "كشري", "صالونة باميا مع الدجاج"], ["بطاطس بالصلصة الحارة", "باذنجان بالصلصة الحارة"], ["ارز ابيض", "ارز زعفران", "ارز بالشعيرية", "براتا", "نودلز", "نودلز بالخضار"]],
+                en: [["Bryani Laham", "Bryani chicken", "kabsa Laham", "kabsa chicken"], ["Chicken Margouga", "Chicken thread", "Chicken Masala", "Chicken Butter"], ["Pasta white", "Pasta pink", "béchamel", "lasagna", "Bolognese pasta"], ["a tray of potato balls with chicken", "chicken escalope with mashed potatoes", "Mixed grills"], ["Shrimp fry with Chinese rice", "Chicken fillet with cream and mushrooms"], ["Harees meat", "Harees chicken", "koshari", "pamia salona with chicken"], ["Potatoes with hot sauce", "eggplant with hot sauce"], ["White rice", "saffron rice", "rice with sharia", "paratha", "noodles", "noodles with vegetables"]]
+            },
+            sides: {
+                ar: [["فتوش", "تبولة", "جرجير مع شمندر"], ["حمص", "متبل", "بابا غنوج"], ["سلطة المتاي", "سلطة الناتشوز"], ["سيزر سلط", "المعكرونة والروبيان"], ["فتة دجاج", "فتة باذنجان", "ديناميت دجاج", "ديناميت ربيان"], ["مسخن", "كبة", "سبرينغ رول", "مكس صنفين"], ["محشي ورق عنب", "ملفوف", "كوسا", "مكس صنفين"], ["ساندويتش تورتيلا", "كلوب ساندويتش", "مكس صنفين", "برجر"]],
+                en: [["Fattoush", "Tabbouleh", "jar jiar Salad with shamander"], ["Hummus", "Mutabbal", "Baba Ghanoush"], ["Matai salad", "nachos salad"], ["Caesar salad", "macron and shrimp salad"], ["Chicken Fattah", "Eggplant Fattah", "dynamite chicken", "dynamite shrimp"], ["Musakhan", "Kibbeh", "spring rolls", "MIX 2 type"], ["Warq Unap Mahshi", "Malfof Mahshi", "kusa Mahshi", "MIX 2 type"], ["Tortilla Sandwich", "Club Sandwich", "MIX 2 type", "mini Burger"]]
+            },
+            sweets: {
+                ar: [["ام علي", "كنافة", "بودينغ تمر"], ["شيز كيك", "تارت مكس", "مكس صنفين"], ["سلطة فواكه", "سويتات اكواب باردة", "مكس صنفين"], ["كيكة الزعفران بالكسترد", "كسترد", "مكس صنفين"], ["مهلبية", "كريم كراميل", "مكس صنفين"]],
+                en: [["Um Ali", "kunafa", "Budding Cake dates"], ["cheese cake", "tart mini mix", "MIX 2 type"], ["fruit salad", "sweet cup cold mix", "MIX 2 type"], ["Saffron cake with custard", "custard", "MIX 2 type"], ["Mahlbia", "cream caramel", "MIX 2 type"]]
+            }
+        },
+        "70": {
+            mains: { 
+                ar: [["برياني لحم", "برياني دجاج", "مكبوس لحم", "مكبوس دجاج"], ["مرقوقة دجاج", "ثريد دجاج", "مسالا دجاج", "شكن بتر"], ["باستا وايت", "باستا بينك", "بشاميل", "لازانيا", "معكرونة بولونيز"], ["صينية كرات البطاطا مع الدجاج", "اسكالوب الدجاج مع البطاطا المهروسة", "مشاوي مشكله"], ["ربيان مقلي مع الرز الصيني", "فيليه الدجاج بالكريمه والمشروم"], ["هريس لحم", "هريس دجاج", "كشري", "صالونة باميا مع الدجاج"], ["بطاطس بالصلصة الحارة", "باذنجان بالصلصة الحارة"], ["ارز ابيض", "ارز زعفران", "ارز بالشعيرية", "براتا", "نودلز", "نودلز بالخضار"]],
+                en: [["Bryani Laham", "Bryani chicken", "kabsa Laham", "kabsa chicken"], ["Chicken Margouga", "Chicken thread", "Chicken Masala", "Chicken Butter"], ["Pasta white", "Pasta pink", "béchamel", "lasagna", "Bolognese pasta"], ["a tray of potato balls with chicken", "chicken escalope with mashed potatoes", "Mixed grills"], ["Shrimp fry with Chinese rice", "Chicken fillet with cream and mushrooms"], ["Harees meat", "Harees chicken", "koshari", "pamia salona with chicken"], ["Potatoes with hot sauce", "eggplant with hot sauce"], ["White rice", "saffron rice", "rice with sharia", "paratha", "noodles", "noodles with vegetables"]]
+            },
+            sides: {
+                ar: [["فتوش", "تبولة", "جرجير مع شمندر"], ["حمص", "متبل", "بابا غنوج"], ["سلطة المتاي", "سلطة الناتشوز"], ["سيزر سلط", "المعكرونة والروبيان"], ["فتة دجاج", "فتة باذنجان", "ديناميت دجاج", "ديناميت ربيان"], ["مسخن", "كبة", "مكس صنفين"], ["محشي ورق عنب", "ملفوف", "كوسا", "مكس صنفين"], ["سمبوسة", "سبرينغ رول", "مكس صنفين"], ["ساندويتش تورتيلا", "كلوب ساندويتش", "مكس صنفين", "برجر"]],
+                en: [["Fattoush", "Tabbouleh", "jar jiar Salad with shamander"], ["Hummus", "Mutabbal", "Baba Ghanoush"], ["Matai salad", "nachos salad"], ["Caesar salad", "macron and shrimp salad"], ["Chicken Fattah", "Eggplant Fattah", "dynamite chicken", "dynamite shrimp"], ["Musakhan", "Kibbeh", "MIX 2 type"], ["Warq Unap Mahshi", "Malfof Mahshi", "kusa Mahshi", "MIX 2 type"], ["Mix Samboosa", "spring rolls", "MIX 2 type"], ["Tortilla Sandwich", "Club Sandwich", "MIX 2 type", "mini Burger"]]
+            },
+            sweets: {
+                ar: [["ام علي", "كنافة", "بودينغ تمر"], ["شيز كيك", "تارت مشكل", "مكس صنفين"], ["سلطة فواكه", "سويتات اكواب باردة", "مكس صنفين"], ["كيكة الزعفران بالكسترد", "كسترد", "مكس صنفين"], ["مهلبية", "كريم كراميل", "مكس صنفين"]],
+                en: [["Um Ali", "kunafa", "Budding Cake dates"], ["cheese cake", "tart mini mix", "MIX 2 type"], ["fruit salad", "sweet cup cold mix", "MIX 2 type"], ["Saffron cake with custard", "custard", "MIX 2 type"], ["Mahlbia", "cream caramel", "MIX 2 type"]]
+            }
+        }
+    };
+
+    function toggleLanguage() {
+        currentLang = currentLang === 'ar' ? 'en' : 'ar';
+        document.getElementById('htmlTag').dir = currentLang === 'ar' ? 'rtl' : 'ltr';
+        const t = translations[currentLang];
+        document.getElementById('langBtn').innerText = currentLang === 'ar' ? 'English' : 'عربي';
+        document.getElementById('title').innerText = t.title;
+        document.getElementById('subtitle').innerText = t.subtitle;
+        document.getElementById('lblCustName').innerText = t.name;
+        document.getElementById('lblDate').innerText = t.date;
+        document.getElementById('lblLoc').innerText = t.loc;
+        document.getElementById('lblMenu').innerText = t.menu;
+        document.getElementById('optDefault').innerText = t.opt;
+        document.getElementById('lblExtraTitle').innerText = t.extra;
+        document.getElementById('btnSend').innerText = t.send;
+        
+        document.getElementById('opt20').innerText = t.m20;
+        document.getElementById('opt30').innerText = t.m30;
+        document.getElementById('opt40').innerText = t.m40;
+        document.getElementById('opt50').innerText = t.m50;
+        document.getElementById('opt60').innerText = t.m60;
+        document.getElementById('opt70').innerText = t.m70;
+        
+        loadMenu();
+    }
+
+    function loadMenu() {
+        const val = document.getElementById('menuSelect').value;
+        const box = document.getElementById('menuContainer');
+        if(!val) { box.style.display='none'; return; }
+        box.style.display='block';
+        const d = menus[val];
+        renderS('mainsArea', translations[currentLang].mainT, 'M', d.mains[currentLang]);
+        renderS('sidesArea', translations[currentLang].sideT, 'S', d.sides[currentLang]);
+        renderS('sweetsArea', translations[currentLang].sweetT, 'W', d.sweets[currentLang]);
+    }
+
+    function renderS(id, title, prefix, groups) {
+        let h = `<div class="section-title">${title}</div>`;
+        groups.forEach((items, gI) => {
+            const gId = `${prefix}_${gI}`;
+            h += `<div class="sub-group">
+                    <div class="group-number">${gI + 1}</div>
+                    <span class="choose-hint">${translations[currentLang].hint}</span>`;
+            items.forEach(it => {
+                // النظام يتعرف على خيارات "مكس" لفتح خانة النص
+                const isMix = it.includes("مكس") || it.includes("MIX 2 type");
+                h += `<label class="option"><input type="radio" name="${gId}" value="${it}" onclick="toggleM('${gId}', ${isMix})"><span>${it}</span></label>`;
+                if(isMix) h += `<div id="box_${gId}" class="mix-box"><input type="text" id="input_${gId}" placeholder="${translations[currentLang].mixPlc}"></div>`;
+            });
+            h += `</div>`;
+        });
+        document.getElementById(id).innerHTML = h;
+    }
+
+    function toggleM(gid, s) { 
+        let b = document.getElementById(`box_${gid}`); 
+        if(b) b.style.display = s ? 'block' : 'none'; 
+    }
+
+    function getF(id) {
+        let t = ""; let i = 1;
+        document.querySelectorAll(`#${id} input[type="radio"]:checked`).forEach(r => {
+            let v = r.value; const m = document.getElementById(`input_${r.name}`);
+            if(m && m.value && (v.includes("مكس") || v.includes("MIX 2 type"))) v += ` (${m.value})`;
+            t += `${i}- ${v}%0a`; i++;
+        });
+        return t;
+    }
+
+    function sendWhatsApp() {
+        const name = document.getElementById('custName').value;
+        const menuS = document.getElementById('menuSelect');
+        const menuT = menuS.options[menuS.selectedIndex].text;
+        const date = document.getElementById('orderDate').value;
+        const loc = document.getElementById('loc').value;
+        if(!name || !menuS.value || !date || !loc) { alert(currentLang === 'ar' ? "أكمل البيانات" : "Please fill all fields"); return; }
+        
+        let msg = `*🍱 ${currentLang === 'ar' ? 'طلب حجز ريان ميني' : 'RYAN MINI Booking'}*%0a%0a👤 *${currentLang === 'ar' ? 'الاسم' : 'Name'}:* ${name}%0a👥 *${currentLang === 'ar' ? 'القائمة' : 'Menu'}:* ${menuT}%0a📅 *${currentLang === 'ar' ? 'التاريخ' : 'Date'}:* ${date}%0a📍 *${currentLang === 'ar' ? 'المنطقة' : 'Area'}:* ${loc}%0a%0a`;
+        
+        const m = getF('mainsArea'); if(m) msg += `*🍽 ${translations[currentLang].mainT}:*%0a${m}%0a`;
+        const s = getF('sidesArea'); if(s) msg += `*🥗 ${translations[currentLang].sideT}:*%0a${s}%0a`;
+        const w = getF('sweetsArea'); if(w) msg += `*🍰 ${translations[currentLang].sweetT}:*%0a${w}%0a`;
+        
+        const ex = document.getElementById('extraText').value; 
+        if(ex.trim()) msg += `📝 *${currentLang === 'ar' ? 'ملاحظات' : 'Notes'}:* ${ex}`;
+        
+        window.open(`https://wa.me/971527024554?text=${msg}`, '_blank');
+    }
+</script>
+</body>
+</html>
